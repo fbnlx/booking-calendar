@@ -70,7 +70,7 @@ const RootQuery = new GraphQLObjectType({
       args: {
         id: { type: GraphQLString },
       },
-      async resolve(parent, args) {
+      async resolve(_, args) {
         const res = await axios.get<Photographer>(
           `http://localhost:3000/photographers/${args.id}?_embed=availabilities`
         );
@@ -79,25 +79,19 @@ const RootQuery = new GraphQLObjectType({
     },
     photographers: {
       type: new GraphQLList(PhotographerExtendedType),
-      async resolve(parent, args) {
+      async resolve(_, args) {
         const res = await axios.get<Photographer[]>(
           "http://localhost:3000/photographers?_embed=availabilities&_embed=bookings"
         );
         return res.data;
       },
     },
-  },
-});
-
-const mutation = new GraphQLObjectType({
-  name: "Mutation",
-  fields: {
-    addBooking: {
+    booking: {
       type: new GraphQLList(BookingResponseType),
       args: {
         duration: { type: GraphQLNonNull(GraphQLString) },
       },
-      async resolve(parent, args) {
+      async resolve(_, args) {
         const duration = parseInt(args.duration);
         const photographers = await axios.get<Photographer[]>(
           "http://localhost:3000/photographers?_embed=availabilities&_embed=bookings"
@@ -133,17 +127,12 @@ const mutation = new GraphQLObjectType({
             if (
               start.clone().add(duration, "minutes").isBefore(moment(av.ends))
             ) {
-              const res = await axios.post<Booking>(
-                "http://localhost:3000/bookings",
-                {
-                  photographerId: photographer.id,
-                  starts: start,
-                  ends: start.clone().add(duration, "minutes"),
-                }
-              );
               availabilityResults.push({
                 photographer: { id: photographer.id, name: photographer.name },
-                timeSlot: { starts: res.data.starts, ends: res.data.ends },
+                timeSlot: {
+                  starts: start.toISOString(),
+                  ends: start.clone().add(duration, "minutes").toISOString(),
+                },
               });
               break;
             }
@@ -158,5 +147,4 @@ const mutation = new GraphQLObjectType({
 
 module.exports = new GraphQLSchema({
   query: RootQuery,
-  mutation,
 });
