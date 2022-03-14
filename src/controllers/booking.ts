@@ -8,17 +8,22 @@ export default async function availableTimeSlotsForBooking(
   const photographers = await axios.get<Photographer[]>(
     "http://localhost:3000/photographers?_embed=availabilities&_embed=bookings"
   );
+
   const availabilityResults: BookingResponse[] = [];
+
   for (let i = 0; i < photographers.data.length; i++) {
     const photographer = photographers.data[i];
-    for (let j = 0; j < photographer.availabilities.length; j++) {
-      const av = photographer.availabilities[j];
+    const availabilities = photographer.availabilities.sort(
+      (a, b) => moment(a.starts).unix() - moment(b.starts).unix()
+    );
+    for (let j = 0; j < availabilities.length; j++) {
+      const av = availabilities[j];
       let start = moment(av.starts);
       while (
         start
           .clone()
           .add(durationInMinutes, "minutes")
-          .isBefore(moment(av.ends))
+          .isBefore(moment(av.ends).clone().add(1, "minutes"))
       ) {
         const conflictingBooking = photographer.bookings.find(
           (booking) =>
@@ -43,7 +48,7 @@ export default async function availableTimeSlotsForBooking(
         start
           .clone()
           .add(durationInMinutes, "minutes")
-          .isBefore(moment(av.ends))
+          .isBefore(moment(av.ends).clone().add(1, "minutes"))
       ) {
         availabilityResults.push({
           photographer: { id: photographer.id, name: photographer.name },
