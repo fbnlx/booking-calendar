@@ -1,3 +1,43 @@
 .App {
   text-align: center;
 }
+
+header {
+  line-height: 5rem;
+  font-size: 30px;
+  text-transform: uppercase;
+  background-color: rgb(222, 245, 245);
+  letter-spacing: 1px;
+}
+
+.results_text {
+  display: block;
+  font-weight: 600;
+  margin: 2rem 0;
+}
+
+form {
+  width: 325px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left;
+  margin-top: 2rem;
+}
+
+form input {
+  flex-grow: 1;
+}
+
+.input__container {
+  display: flex;
+  height: 30px;
+  margin-top: 0.5rem;
+}
+
+button {
+  background-color: #6b77eb;
+  border: none;
+  cursor: pointer;
+  color: white;
+  width: 120px;
+}
