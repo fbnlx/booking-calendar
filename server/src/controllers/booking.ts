@@ -6,7 +6,7 @@ export default async function availableTimeSlotsForBooking(
   durationInMinutes: number
 ): Promise<BookingResponse[]> {
   const photographers = await axios.get<Photographer[]>(
-    "http://localhost:3000/photographers?_embed=availabilities&_embed=bookings"
+    "http://localhost:3001/photographers?_embed=availabilities&_embed=bookings"
   );
 
   const availabilityResults: BookingResponse[] = [];

@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon --exec npx ts-node src/server.ts",
     "start-server": "node src/server.ts",
-    "json-server": "json-server --watch data.json",
+    "json-server": "json-server -p 3001 --watch data.json",
     "build-ts": "tsc",
     "watch-ts": "tsc -w"
   },

@@ -72,7 +72,7 @@ const RootQuery = new GraphQLObjectType({
       },
       async resolve(_, args) {
         const res = await axios.get<Photographer>(
-          `http://localhost:3000/photographers/${args.id}?_embed=availabilities`
+          `http://localhost:3001/photographers/${args.id}?_embed=availabilities`
         );
         return res.data;
       },
@@ -81,7 +81,7 @@ const RootQuery = new GraphQLObjectType({
       type: new GraphQLList(PhotographerExtendedType),
       async resolve(_, args) {
         const res = await axios.get<Photographer[]>(
-          "http://localhost:3000/photographers?_embed=availabilities&_embed=bookings"
+          "http://localhost:3001/photographers?_embed=availabilities&_embed=bookings"
         );
         return res.data;
       },
